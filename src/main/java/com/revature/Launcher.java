@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.revature.controllers.AuthController;
 import com.revature.controllers.EmployeeController;
 import com.revature.models.Menu;
 import com.revature.utils.ConnectionUtil;
@@ -32,6 +33,9 @@ public class Launcher {
 		//Instantiating an EmployeeController object so that we can access it's Handlers
 		EmployeeController ec = new EmployeeController();
 		
+		//Instantiating an AuthCrontroller object so we can access it's Handlers
+		AuthController ac = new AuthController();
+		
 		
 		//Typical Javalin syntax to create a Javalin object
 		Javalin app = Javalin.create(
@@ -39,7 +43,7 @@ public class Launcher {
 					config -> {
 						config.enableCorsForAllOrigins(); //this allows us to process JS requests from anywhere
 					}
-				).start(3000);
+				).start(3000); //we need this to start our application on port 3000
 		
 		//We need to make some endpoint handlers, which will take in requests and send them where they need to go
 		//Javalin endpoint handlers are like the traffic cop to your server. They take traffic and direct it.
@@ -48,6 +52,10 @@ public class Launcher {
 		//handler ending in /employees that takes in GET requests - will return all employees
 		//the app.get() method takes in a URL endpoint, and a place in the server to send the request to
 		app.get("/employees", ec.getEmployeesHandler);
+		
+		//handler ending in /login that takes in POST requests -will validate user login
+		//the app.post() method takes in URL endpoint, add a place in the server to send the request to
+		app.post("/login", ac.loginHandler);
 		
 	}
 	
